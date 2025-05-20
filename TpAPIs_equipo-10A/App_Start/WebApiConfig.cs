@@ -19,6 +19,7 @@ namespace TpAPIs_equipo_10A
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
     }
 }
