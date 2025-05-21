@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Dominio;
 using Negocio;
+using TpAPIs_equipo_10A.Models;
 
 namespace TpAPIs_equipo_10A.Controllers
 {
@@ -75,7 +76,7 @@ namespace TpAPIs_equipo_10A.Controllers
 
 
         // POST: api/Articulo
-        public void Post([FromBody]string value)
+        public void Post([FromBody] ArticuloDto articulo)
         {
         }
 
