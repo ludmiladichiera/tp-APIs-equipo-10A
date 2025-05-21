@@ -21,67 +21,52 @@ namespace Negocio
             {
                 conexion.ConnectionString = "server=.\\SQLEXPRESS; database=CATALOGO_P3_DB; integrated security=true";
                 comando.CommandType = System.Data.CommandType.Text;
-                comando.CommandText = (@"SELECT A.Id, A.Codigo, A.Nombre, A.Descripcion, A.IdMarca, M.Descripcion AS Marca, 
-                     A.IdCategoria, C.Descripcion AS Categoria, A.Precio, 
-                     MIN(I.ImagenUrl) AS ImagenesUrl
-                     FROM ARTICULOS A
-                     JOIN MARCAS M ON A.IdMarca = M.Id
-                     LEFT JOIN CATEGORIAS C ON A.IdCategoria = C.Id
-                     LEFT JOIN IMAGENES I ON A.Id = I.IdArticulo
-                     GROUP BY A.Id, A.Codigo, A.Nombre, A.Descripcion, A.IdMarca, M.Descripcion, A.IdCategoria, C.Descripcion, A.Precio");
-               
+                comando.CommandText = @"
+            SELECT A.Id, A.Codigo, A.Nombre, A.Descripcion, A.IdMarca, M.Descripcion AS Marca,
+                   A.IdCategoria, C.Descripcion AS Categoria, A.Precio
+            FROM ARTICULOS A
+            JOIN MARCAS M ON A.IdMarca = M.Id
+            LEFT JOIN CATEGORIAS C ON A.IdCategoria = C.Id";
+
                 comando.Connection = conexion;
 
                 conexion.Open();
                 lector = comando.ExecuteReader();
 
-                while (lector.Read()) //posiciona el puntero
+                while (lector.Read())
                 {
                     Articulo aux = new Articulo();
-
                     aux.Id = (int)lector["Id"];
-
                     aux.Codigo = lector["Codigo"] != DBNull.Value ? (string)lector["Codigo"] : "No especifica";
                     aux.Nombre = lector["Nombre"] != DBNull.Value ? (string)lector["Nombre"] : "No especifica";
                     aux.Descripcion = lector["Descripcion"] != DBNull.Value ? (string)lector["Descripcion"] : "No especifica";
-                   
                     aux.Precio = lector["Precio"] != DBNull.Value ? (decimal)lector["Precio"] : 0;
 
-
                     aux.Marca = new Marca();
-                    
-                    aux.Marca.Descripcion = lector["Marca"] != DBNull.Value ? lector["Marca"].ToString() : "NO especifica";
+                    aux.Marca.Id = (int)lector["IdMarca"];
+                    aux.Marca.Descripcion = lector["Marca"] != DBNull.Value ? lector["Marca"].ToString() : "No especifica";
 
                     aux.Categoria = new Categoria();
-                    aux.Categoria.Descripcion = lector["Categoria"] != DBNull.Value ? lector["Categoria"].ToString() : "NO especifica";
+                    aux.Categoria.Id = (int)lector["IdCategoria"];
+                    aux.Categoria.Descripcion = lector["Categoria"] != DBNull.Value ? lector["Categoria"].ToString() : "No especifica";
 
-
-
-                   
-                    if (aux.Imagenes == null)
-                        aux.Imagenes = new List<Imagen>();
-
-                    if (!(lector["ImagenesUrl"] is DBNull))
-                    {
-                        aux.Imagenes.Add(new Imagen(lector["ImagenesUrl"].ToString()));
-                    }
-                    else
-                    {
-                        aux.Imagenes.Add(new Imagen("https://media.istockphoto.com/id/1128826884/es/vector/ning%C3%BAn-s%C3%ADmbolo-de-vector-de-imagen-falta-icono-disponible-no-hay-galer%C3%ADa-para-este-momento.jpg?s=612x612&w=0&k=20&c=9vnjI4XI3XQC0VHfuDePO7vNJE7WDM8uzQmZJ1SnQgk="));
-                    }
-
+                    aux.Imagenes = new List<Imagen>();
 
                     lista.Add(aux);
                 }
 
-                conexion.Close();
                 return lista;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+            finally
+            {
+                conexion.Close();
+            }
         }
+
 
         public int agregarArticuloYDevolverId(Articulo nuevoArticulo)
         {
