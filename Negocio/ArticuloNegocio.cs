@@ -8,7 +8,7 @@ using Dominio;
 
 namespace Negocio
 {
-    internal class ArticuloNegocio
+    public class ArticuloNegocio
     {
         public List<Articulo> listar()
         {
@@ -19,7 +19,7 @@ namespace Negocio
 
             try
             {
-                conexion.ConnectionString = "server=.\\SQLEXPRESS; database=PROMOS_DB; integrated security=true";
+                conexion.ConnectionString = "server=.\\SQLEXPRESS; database=CATALOGO_P3_DB; integrated security=true";
                 comando.CommandType = System.Data.CommandType.Text;
                 comando.CommandText = (@"SELECT A.Id, A.Codigo, A.Nombre, A.Descripcion, A.IdMarca, M.Descripcion AS Marca, 
                      A.IdCategoria, C.Descripcion AS Categoria, A.Precio, 
