@@ -76,23 +76,36 @@ namespace TpAPIs_equipo_10A.Controllers
 
 
         // POST: api/Articulo
-        public void Post([FromBody] ArticuloDto articuloDto)
+        public HttpResponseMessage Post([FromBody] ArticuloDto articuloDto)
         {
-            int IDnuevo = 0;
-
+            int nuevoID;
             ArticuloNegocio negocioArticulo = new ArticuloNegocio();
             Articulo articulo = new Articulo();
+            try
+            {
+                articulo.Codigo = articuloDto.Codigo;
+                articulo.Nombre = articuloDto.Nombre;
+                articulo.Descripcion = articuloDto.Descripcion;
+                articulo.Marca = new Marca { Id = articuloDto.IdMarca };
+                articulo.Categoria = new Categoria { Id = articuloDto.IdCategoria };
+                articulo.Precio = articuloDto.Precio;
 
+                if (string.IsNullOrEmpty(articuloDto.Codigo) || string.IsNullOrEmpty(articuloDto.Nombre) || string.IsNullOrEmpty(articuloDto.Descripcion))
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Los campos no pueden estar vacíos");
+                }
+                if (articuloDto.IdMarca <= 0 || articuloDto.IdCategoria <= 0 || articuloDto.Precio <= 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Los valores no pueden ser menores o iguales a cero");
+                }
 
-            articulo.Codigo = articuloDto.Codigo;
-            articulo.Nombre = articuloDto.Nombre;
-            articulo.Descripcion = articuloDto.Descripcion;
-            articulo.Marca = new Marca { Id = articuloDto.IdMarca };
-            articulo.Categoria = new Categoria { Id = articuloDto.IdCategoria };
-            articulo.Precio = articuloDto.Precio;
-
-            IDnuevo = negocioArticulo.agregarArticuloYDevolverId(articulo);
-
+                nuevoID=negocioArticulo.agregarArticuloYDevolverId(articulo);
+                return Request.CreateResponse(HttpStatusCode.Created, $"Artículo agregado correctamente con ID {nuevoID}");
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado.");
+            }
         }
 
         // PUT: api/Articulo/5
