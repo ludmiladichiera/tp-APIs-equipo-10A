@@ -109,8 +109,27 @@ namespace TpAPIs_equipo_10A.Controllers
         }
 
         // PUT: api/Articulo/5
-        public void Put(int id, [FromBody]string value)
+        public HttpResponseMessage Put(int id, [FromBody] ArticuloDto articuloDto)
         {
+
+            ArticuloNegocio negocioArticulo = new ArticuloNegocio();
+            Articulo modificar = new Articulo();
+            try
+            {
+                modificar.Codigo = articuloDto.Codigo;
+                modificar.Nombre = articuloDto.Nombre;
+                modificar.Descripcion = articuloDto.Descripcion;
+                modificar.Marca = new Marca { Id = articuloDto.IdMarca };
+                modificar.Categoria = new Categoria { Id = articuloDto.IdCategoria };
+                modificar.Precio = articuloDto.Precio;
+                modificar.Id = id;
+                negocioArticulo.modificarArticulo(modificar);
+                return Request.CreateResponse(HttpStatusCode.OK, "Artículo actualizado correctamente.");
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado.");
+            }
         }
 
         // DELETE: api/Articulo/5
