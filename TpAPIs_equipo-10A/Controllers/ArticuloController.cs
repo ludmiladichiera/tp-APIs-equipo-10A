@@ -76,8 +76,23 @@ namespace TpAPIs_equipo_10A.Controllers
 
 
         // POST: api/Articulo
-        public void Post([FromBody] ArticuloDto articulo)
+        public void Post([FromBody] ArticuloDto articuloDto)
         {
+            int IDnuevo = 0;
+
+            ArticuloNegocio negocioArticulo = new ArticuloNegocio();
+            Articulo articulo = new Articulo();
+
+
+            articulo.Codigo = articuloDto.Codigo;
+            articulo.Nombre = articuloDto.Nombre;
+            articulo.Descripcion = articuloDto.Descripcion;
+            articulo.Marca = new Marca { Id = articuloDto.IdMarca };
+            articulo.Categoria = new Categoria { Id = articuloDto.IdCategoria };
+            articulo.Precio = articuloDto.Precio;
+
+            IDnuevo = negocioArticulo.agregarArticuloYDevolverId(articulo);
+
         }
 
         // PUT: api/Articulo/5
