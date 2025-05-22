@@ -90,11 +90,11 @@ namespace TpAPIs_equipo_10A.Controllers
                 articulo.Categoria = new Categoria { Id = articuloDto.IdCategoria };
                 articulo.Precio = articuloDto.Precio;
 
-                if (string.IsNullOrEmpty(articuloDto.Codigo) || string.IsNullOrEmpty(articuloDto.Nombre) || string.IsNullOrEmpty(articuloDto.Descripcion))
+                if (string.IsNullOrEmpty(articuloDto.Codigo) && string.IsNullOrEmpty(articuloDto.Nombre) && string.IsNullOrEmpty(articuloDto.Descripcion))
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "Los campos no pueden estar vacíos");
                 }
-                if (articuloDto.IdMarca <= 0 || articuloDto.IdCategoria <= 0 || articuloDto.Precio <= 0)
+                if (articuloDto.IdMarca <= 0 && articuloDto.IdCategoria <= 0 && articuloDto.Precio <= 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "Los valores no pueden ser menores o iguales a cero");
                 }

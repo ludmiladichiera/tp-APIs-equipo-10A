@@ -156,6 +156,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\ArticuloController.cs" />
+    <Compile Include="Controllers\FiltroBusquedaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImagenController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -163,6 +164,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ArticuloDto.cs" />
+    <Compile Include="Models\FiltroBusquedaDto.cs" />
     <Compile Include="Models\ImagenDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
