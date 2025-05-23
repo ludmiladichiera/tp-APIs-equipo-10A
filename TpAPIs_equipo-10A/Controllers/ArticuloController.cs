@@ -99,7 +99,7 @@ namespace TpAPIs_equipo_10A.Controllers
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "Los valores no pueden ser menores o iguales a cero");
                 }
 
-                nuevoID=negocioArticulo.agregarArticuloYDevolverId(articulo);
+                nuevoID = negocioArticulo.agregarArticuloYDevolverId(articulo);
                 return Request.CreateResponse(HttpStatusCode.Created, $"Artículo agregado correctamente con ID {nuevoID}");
             }
             catch (Exception)
@@ -109,9 +109,9 @@ namespace TpAPIs_equipo_10A.Controllers
         }
 
         // PUT: api/Articulo/5
+        //modificar   un articulo--------------------
         public HttpResponseMessage Put(int id, [FromBody] ArticuloDto articuloDto)
         {
-
             ArticuloNegocio negocioArticulo = new ArticuloNegocio();
             Articulo modificar = new Articulo();
             try
@@ -133,8 +133,19 @@ namespace TpAPIs_equipo_10A.Controllers
         }
 
         // DELETE: api/Articulo/5
-        public void Delete(int id)
+        public HttpResponseMessage Delete(int id)
         {
+            ArticuloNegocio negocioArticulo = new ArticuloNegocio();
+            try
+            {
+                //metodo de eliminacion fisica
+                negocioArticulo.EliminarArticulo(id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Artículo eliminado correctamente.");
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado.");
+            }
         }
     }
 }
