@@ -90,7 +90,8 @@ namespace TpAPIs_equipo_10A.Controllers
                 articulo.Categoria = new Categoria { Id = articuloDto.IdCategoria };
                 articulo.Precio = articuloDto.Precio;
 
-                List<string> errores = new List<string>();
+                List<string> errores = new List<string>(); //list para mostrar todos los erroers en el Json en vez de mostrar el primero que salte
+
 
                 if (string.IsNullOrEmpty(articuloDto.Codigo))
                     errores.Add("El campo Código es obligatorio");
@@ -137,8 +138,38 @@ namespace TpAPIs_equipo_10A.Controllers
                 modificar.Categoria = new Categoria { Id = articuloDto.IdCategoria };
                 modificar.Precio = articuloDto.Precio;
                 modificar.Id = id;
+
+                //validaciones:
+                List<string> errores = new List<string>(); //list para mostrar todos los erroers en el Json en vez de mostrar el primero que salte
+
+                if (!negocioArticulo.ArticuloExiste(id))
+                    errores.Add("El artículo que se intenta modificar no existe");
+
+                if (string.IsNullOrEmpty(articuloDto.Codigo))
+                    errores.Add("El campo Código es obligatorio");
+
+                if (string.IsNullOrEmpty(articuloDto.Nombre))
+                    errores.Add("El campo Nombre es obligatorio");
+
+                if (string.IsNullOrEmpty(articuloDto.Descripcion))
+                    errores.Add("El campo Descripción es obligatorio");
+
+                if (articuloDto.IdMarca <= 0)
+                    errores.Add("El IdMarca debe ser mayor que 0");
+
+                if (articuloDto.IdCategoria <= 0)
+                    errores.Add("El IdCategoria debe ser mayor que 0");
+
+                if (articuloDto.Precio <= 0)
+                    errores.Add("El precio debe ser mayor que 0");
+
+                if (errores.Count > 0)
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errores);
+
+
+
                 negocioArticulo.modificarArticulo(modificar);
-                return Request.CreateResponse(HttpStatusCode.OK, "Artículo actualizado correctamente.");
+                return Request.CreateResponse(HttpStatusCode.OK, $"Artículo actualizado correctamente. ID: {id}");
             }
             catch (Exception)
             {
@@ -154,7 +185,7 @@ namespace TpAPIs_equipo_10A.Controllers
             {
                 //metodo de eliminacion fisica
                 negocioArticulo.EliminarArticulo(id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Artículo eliminado correctamente.");
+                return Request.CreateResponse(HttpStatusCode.OK, $"Artículo eliminado correctamente. ID: {id}");
             }
             catch (Exception)
             {
