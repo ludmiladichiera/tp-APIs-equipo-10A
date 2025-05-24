@@ -90,14 +90,28 @@ namespace TpAPIs_equipo_10A.Controllers
                 articulo.Categoria = new Categoria { Id = articuloDto.IdCategoria };
                 articulo.Precio = articuloDto.Precio;
 
-                if (string.IsNullOrEmpty(articuloDto.Codigo) && string.IsNullOrEmpty(articuloDto.Nombre) && string.IsNullOrEmpty(articuloDto.Descripcion))
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Los campos no pueden estar vacíos");
-                }
-                if (articuloDto.IdMarca <= 0 && articuloDto.IdCategoria <= 0 && articuloDto.Precio <= 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Los valores no pueden ser menores o iguales a cero");
-                }
+                List<string> errores = new List<string>();
+
+                if (string.IsNullOrEmpty(articuloDto.Codigo))
+                    errores.Add("El campo Código es obligatorio");
+
+                if (string.IsNullOrEmpty(articuloDto.Nombre))
+                    errores.Add("El campo Nombre es obligatorio");
+
+                if (string.IsNullOrEmpty(articuloDto.Descripcion))
+                    errores.Add("El campo Descripción es obligatorio");
+
+                if (articuloDto.IdMarca <= 0)
+                    errores.Add("El IdMarca debe ser mayor que 0");
+
+                if (articuloDto.IdCategoria <= 0)
+                    errores.Add("El IdCategoria debe ser mayor que 0");
+
+                if (articuloDto.Precio <= 0)
+                    errores.Add("El precio debe ser mayor que 0");
+
+                if (errores.Count > 0)
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errores);
 
                 nuevoID = negocioArticulo.agregarArticuloYDevolverId(articulo);
                 return Request.CreateResponse(HttpStatusCode.Created, $"Artículo agregado correctamente con ID {nuevoID}");
