@@ -35,6 +35,10 @@ namespace TpAPIs_equipo_10A.Controllers
                 if (dto.IdArticulo <= 0)
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "Id de artículo inválido.");
 
+                ArticuloNegocio negocioArticulo = new ArticuloNegocio();
+                if (!negocioArticulo.existeArticuloPorId(dto.IdArticulo))
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El artículo especificado no existe.");
+
                 ImagenNegocio negocio = new ImagenNegocio();
 
                 foreach (var url in dto.Imagenes)
@@ -52,11 +56,9 @@ namespace TpAPIs_equipo_10A.Controllers
             }
             catch (Exception)
             {
-
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado.");
             }
         }
-
         // PUT: api/Imagen/5
         public void Put(int id, [FromBody]string value)
         {
