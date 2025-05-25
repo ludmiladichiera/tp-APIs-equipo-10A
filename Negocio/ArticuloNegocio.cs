@@ -247,33 +247,7 @@ namespace Negocio
                 throw;
             }
         }
-        public bool ArticuloExiste(int id)
-        {
-            AccesoDatos datos = new AccesoDatos();
-
-            try
-            {
-                datos.setearConsulta("SELECT COUNT(*) FROM ARTICULOS WHERE Id = @id");
-                datos.setearParametro("@id", id);
-                datos.ejecutarLectura();
-
-                if (datos.Lector.Read())
-                {
-                    int count = (int)datos.Lector[0];
-                    return count > 0;
-                }
-
-                return false;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                datos.cerrarConexion();
-            }
-        }
+       
         public List<Articulo> filtrar(string campo, string criterio, string filtro)
         {
             List<Articulo> lista = new List<Articulo>();
@@ -382,5 +356,77 @@ namespace Negocio
                 throw ex;
             }
         }
+
+        public bool existeCodigo(string codigo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("SELECT COUNT(*) FROM ARTICULOS WHERE Codigo = @codigo");
+                datos.setearParametro("@codigo", codigo);
+                datos.ejecutarLectura();
+                if (datos.Lector.Read())
+                    return (int)datos.Lector[0] > 0;
+                return false;
+            }
+            finally { datos.cerrarConexion(); }
+        }
+
+        public bool existeCodigoEnOtroArticulo(string codigo, int idArticulo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("SELECT COUNT(*) FROM ARTICULOS WHERE Codigo = @codigo AND Id <> @id");
+                datos.setearParametro("@codigo", codigo);
+                datos.setearParametro("@id", idArticulo);
+                datos.ejecutarLectura();
+                if (datos.Lector.Read())
+                    return (int)datos.Lector[0] > 0;
+                return false;
+            }
+            finally { datos.cerrarConexion(); }
+        }
+
+        public bool existeArticuloPorId(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("SELECT COUNT(*) FROM ARTICULOS WHERE Id = @id");
+                datos.setearParametro("@id", id);
+                datos.ejecutarLectura();
+                if (datos.Lector.Read())
+                    return (int)datos.Lector[0] > 0;
+                return false;
+            }
+            finally { datos.cerrarConexion(); }
+        }
+        public bool existeMarca(int idMarca)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("SELECT COUNT(*) FROM MARCAS WHERE Id = @id");
+                datos.setearParametro("@id", idMarca);
+                datos.ejecutarLectura();
+                return datos.Lector.Read() && (int)datos.Lector[0] > 0;
+            }
+            finally { datos.cerrarConexion(); }
+        }
+
+        public bool existeCategoria(int idCategoria)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("SELECT COUNT(*) FROM CATEGORIAS WHERE Id = @id");
+                datos.setearParametro("@id", idCategoria);
+                datos.ejecutarLectura();
+                return datos.Lector.Read() && (int)datos.Lector[0] > 0;
+            }
+            finally { datos.cerrarConexion(); }
+        }
     }
 }
+
